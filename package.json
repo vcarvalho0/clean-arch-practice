@@ -17,7 +17,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "lint": "",
+    "lint": "eslint . --ext js,ts",
     "build": "tsup src --out-dir build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
@@ -34,6 +34,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.2",
     "express": "^4.18.2",
+    "supertest": "^6.3.4",
     "tsup": "^8.0.2",
     "tsx": "^4.7.1",
     "zod": "^3.22.4"
@@ -42,6 +43,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.17",
+    "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",

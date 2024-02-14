@@ -1,12 +1,13 @@
-import express from "express";
-import cors from "cors";
-import { env } from "./env";
+import { ServerSetup } from "./server";
 
-const server = express();
+const startServer = async (): Promise<void> => {
+  try {
+    const server = new ServerSetup();
+    await server.init();
+    server.start();
+  } catch (error) {
+    console.log("Something went wrong!", error);
+  }
+};
 
-server.use(cors());
-server.use(express.json());
-
-server.listen(env.PORT, async () => {
-  console.log(`Server is running at ${env.PORT}`);
-});
+startServer();
