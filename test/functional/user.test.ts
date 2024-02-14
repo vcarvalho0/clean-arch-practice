@@ -1,6 +1,7 @@
-import { expect, it, describe, beforeAll } from "vitest";
+import { expect, it, describe, beforeAll, beforeEach } from "vitest";
 import supertest from "supertest";
 import { ServerSetup } from "@/server";
+import { UserPrismaDBRepository } from "@/repositories/prisma-user-repository";
 
 describe("Create user", () => {
   let server: ServerSetup;
@@ -9,6 +10,11 @@ describe("Create user", () => {
     server = new ServerSetup();
 
     await server.init();
+  });
+
+  const userRepository = new UserPrismaDBRepository();
+  beforeEach(async () => {
+    await userRepository.deleteAll();
   });
 
   it("Should create a new user", async () => {
