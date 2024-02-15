@@ -2,6 +2,7 @@ import { expect, it, describe, beforeAll, beforeEach } from "vitest";
 import supertest from "supertest";
 import { ServerSetup } from "@/server";
 import { UserPrismaDBRepository } from "@/repositories/prisma-user-repository";
+import HashService from "@/services/hash";
 
 describe("Create user", () => {
   let server: ServerSetup;
@@ -29,5 +30,16 @@ describe("Create user", () => {
       .send(newUser);
 
     expect(response.status).toBe(201);
+
+    await expect(
+      HashService.comparePassword(newUser.password, response.body.password)
+    ).resolves.toBeTruthy();
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        ...newUser,
+        ...{ password: expect.any(String) }
+      })
+    );
   });
 });

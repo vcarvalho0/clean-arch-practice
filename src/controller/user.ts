@@ -1,9 +1,10 @@
 import { UsersRepository } from "@/repositories/user-repository";
+import HashService from "@/services/hash";
 import { Response, Request } from "express";
 import { z } from "zod";
 
 export class UserController {
-  constructor(private userRepository: UsersRepository) {}
+  constructor(private usersRepository: UsersRepository) {}
 
   public async create(req: Request, res: Response) {
     const userSchema = z.object({
@@ -14,10 +15,12 @@ export class UserController {
 
     const { username, email, password } = userSchema.parse(req.body);
 
-    const user = this.userRepository.create({
+    const hash = await HashService.hashPassword(password);
+
+    const user = await this.usersRepository.create({
       username,
       email,
-      password
+      password: hash
     });
 
     return res.status(201).json(user);
