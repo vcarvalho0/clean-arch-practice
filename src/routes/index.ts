@@ -6,4 +6,7 @@ const userController = new UserController(new UserPrismaDBRepository());
 
 export function configureRouter(app: Application) {
   app.route("/users").post(userController.create.bind(userController));
+  app
+    .route("/users/authenticate")
+    .post(userController.authenticate.bind(userController));
 }
