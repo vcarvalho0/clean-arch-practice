@@ -11,7 +11,7 @@ export default class JwtService {
     });
   }
 
-  public static decodeToken(token: string): JwtToken {
+  public static verifyToken(token: string): JwtToken {
     return jwt.verify(token, "secretjwtkey") as JwtToken;
   }
 }

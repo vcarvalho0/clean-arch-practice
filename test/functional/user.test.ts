@@ -120,7 +120,7 @@ describe("Users tests", () => {
         .post("/users/authenticate")
         .send({ email: newUser.email, password: "123456" });
 
-      const Jwt = AuthService.decodeToken(response.body.token);
+      const Jwt = AuthService.verifyToken(response.body.token);
       expect(Jwt).toMatchObject({ sub: user.id });
 
       expect(response.status).toBe(200);
