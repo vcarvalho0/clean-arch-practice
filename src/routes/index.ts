@@ -1,4 +1,5 @@
 import { UserController } from "@/controller/user";
+import { authMiddleware } from "@/middleware/authentication";
 import { UserPrismaDBRepository } from "@/repositories/prisma-user-repository";
 import { Application } from "express";
 
@@ -9,4 +10,7 @@ export function configureRouter(app: Application) {
   app
     .route("/users/authenticate")
     .post(userController.authenticate.bind(userController));
+  app
+    .route("/users/me")
+    .get(authMiddleware, userController.me.bind(userController));
 }

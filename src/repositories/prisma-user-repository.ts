@@ -34,6 +34,16 @@ export class UserPrismaDBRepository implements UsersRepository {
     return findByEmail;
   }
 
+  async findById(id: string): Promise<User | null> {
+    const findById = await prisma.user.findUnique({
+      where: {
+        id
+      }
+    });
+
+    return findById;
+  }
+
   async deleteAll(): Promise<void> {
     await prisma.user.deleteMany({});
   }

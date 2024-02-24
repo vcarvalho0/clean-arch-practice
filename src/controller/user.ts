@@ -62,4 +62,19 @@ export class UserController extends BaseController {
 
     return res.status(200).json({ ...user, token });
   }
+
+  public async me(req: Request, res: Response) {
+    const { user: id } = req.headers;
+
+    const findUser = await this.usersRepository.findById(id as string);
+
+    if (!findUser) {
+      return this.customErrorResponse(res, {
+        code: 404,
+        message: "User not found"
+      });
+    }
+
+    return res.status(200).json(findUser);
+  }
 }
