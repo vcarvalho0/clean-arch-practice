@@ -27,6 +27,9 @@
     "migration:prod": "prisma migrate deploy",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:unit": "vitest run -c test/vitest.unit.config.ts",
+    "test:functional": "vitest run -c test/vitest.e2e.config.ts",
+    "test:cover": "vitest run --coverage",
     "start": "node build/index.js"
   },
   "dependencies": {
