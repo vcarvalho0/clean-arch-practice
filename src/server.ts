@@ -3,6 +3,7 @@ import cors from "cors";
 import { env } from "./env";
 import { configureRouter } from "./routes";
 import { prisma } from "./database";
+import logger from "./logger";
 
 export class ServerSetup {
   private express: express.Application;
@@ -34,7 +35,7 @@ export class ServerSetup {
 
   public start(): void {
     this.express.listen(env.PORT, () => {
-      console.log(`Server is running at ${env.PORT}`);
+      logger.info(`Server is running at ${env.PORT}`);
     });
   }
 }

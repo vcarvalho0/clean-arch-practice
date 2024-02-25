@@ -1,3 +1,4 @@
+import logger from "./logger";
 import { ServerSetup } from "./server";
 
 const startServer = async (): Promise<void> => {
@@ -6,7 +7,7 @@ const startServer = async (): Promise<void> => {
     await server.init();
     server.start();
   } catch (error) {
-    console.log("Something went wrong!", error);
+    logger.error(`Something went wrong ${error}`);
   }
 };
 

@@ -5,6 +5,7 @@ import {
 } from "@/repositories/handle-database-errors";
 import ErrorFormat, { APIError } from "@/utils/error-format";
 import { Response } from "express";
+import logger from "@/logger";
 
 export abstract class BaseController {
   protected sendCreateErrorResponse(response: Response, error: unknown) {
@@ -20,7 +21,7 @@ export abstract class BaseController {
         })
       );
     } else {
-      console.log(JSON.stringify(error));
+      logger.error(JSON.stringify(error));
       response
         .status(500)
         .send(
