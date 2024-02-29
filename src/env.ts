@@ -2,7 +2,8 @@ import "dotenv/config";
 import z from "zod";
 
 const envSchema = z.object({
-  PORT: z.coerce.number().default(8080)
+  PORT: z.coerce.number().default(8080),
+  SECRET_JWT_KEY: z.string()
 });
 
 const envServer = envSchema.safeParse(process.env);
