@@ -6,6 +6,7 @@ import {
   DatabaseUnknownClientError,
   DatabaseValidationError
 } from "./handle-database-errors";
+import logger from "@/logger";
 
 export class UserPrismaDBRepository implements UsersRepository {
   async create(data: Prisma.UserCreateInput): Promise<User> {
@@ -13,9 +14,7 @@ export class UserPrismaDBRepository implements UsersRepository {
       .create({
         data
       })
-      .catch((error) => {
-        this.handleError(error);
-      });
+      .catch((error) => this.handleError(error));
 
     return user;
   }
@@ -27,9 +26,7 @@ export class UserPrismaDBRepository implements UsersRepository {
           email
         }
       })
-      .catch((error) => {
-        this.handleError(error);
-      });
+      .catch((error) => this.handleError(error));
 
     return findByEmail;
   }
@@ -58,7 +55,7 @@ export class UserPrismaDBRepository implements UsersRepository {
       throw new DatabaseUnknownClientError(error.message);
     }
 
-    console.error("Database Error", error);
+    logger.error("Database Error", error);
     throw new DatabaseInternalError(
       "Something unexpected happened to the database"
     );

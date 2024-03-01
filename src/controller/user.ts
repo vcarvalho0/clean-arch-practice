@@ -60,7 +60,7 @@ export class UserController extends BaseController {
 
     const token = JwtService.generateToken(user.id);
 
-    return res.status(200).json({ ...user, token });
+    return res.status(200).json({ token });
   }
 
   public async me(req: Request, res: Response) {
