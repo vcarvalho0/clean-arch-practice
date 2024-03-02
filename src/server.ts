@@ -2,7 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import { env } from "./env";
 import { configureRouter } from "./routes";
-import { prisma } from "./database";
+import * as database from "./database";
 import logger from "./logger";
 
 export class ServerSetup {
@@ -30,7 +30,11 @@ export class ServerSetup {
   }
 
   public async database(): Promise<void> {
-    await prisma.$connect();
+    await database.connect();
+  }
+
+  public async close(): Promise<void> {
+    await database.close();
   }
 
   public start(): void {
