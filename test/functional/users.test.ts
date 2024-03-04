@@ -1,5 +1,5 @@
 import { expect, it, describe, beforeAll } from "vitest";
-import supertest from "supertest";
+import request from "supertest";
 import { ServerSetup } from "@/server";
 import { UserPrismaDBRepository } from "@/repositories/prisma-user-repository";
 import HashService from "@/services/hash";
@@ -24,7 +24,7 @@ describe("Users tests", () => {
         password: "123456"
       };
 
-      const response = await supertest(server.getExpress())
+      const response = await request(server.getExpress())
         .post("/users")
         .send(newUser);
 
@@ -49,7 +49,7 @@ describe("Users tests", () => {
         password: "123456"
       };
 
-      const response = await supertest(server.getExpress())
+      const response = await request(server.getExpress())
         .post("/users")
         .send(newUser);
 
@@ -71,7 +71,7 @@ describe("Users tests", () => {
         password: "123456"
       };
 
-      const response = await supertest(server.getExpress())
+      const response = await request(server.getExpress())
         .post("/users/authenticate")
         .send(user);
 
@@ -91,7 +91,7 @@ describe("Users tests", () => {
         password: "123"
       };
 
-      const response = await supertest(server.getExpress())
+      const response = await request(server.getExpress())
         .post("/users/authenticate")
         .send(user);
 
@@ -116,7 +116,7 @@ describe("Users tests", () => {
       };
 
       const user = await userRepository.create(newUser);
-      const response = await supertest(server.getExpress())
+      const response = await request(server.getExpress())
         .post("/users/authenticate")
         .send({ email: newUser.email, password: "123456" });
 
