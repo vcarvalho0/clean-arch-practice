@@ -1,6 +1,11 @@
 import logger from "./logger";
 import { ServerSetup } from "./server";
 
+enum Process {
+  SUCCESS = 1,
+  FAILURE = 0
+}
+
 const startServer = async (): Promise<void> => {
   try {
     const server = new ServerSetup();
@@ -14,16 +19,16 @@ const startServer = async (): Promise<void> => {
         try {
           await server.close();
           logger.info("Server closed");
-          process.exit(1);
+          process.exit(Process.SUCCESS);
         } catch (err) {
           logger.error(`Server exited with error ${err}`);
-          process.exit(0);
+          process.exit(Process.FAILURE);
         }
       });
     }
   } catch (error) {
     logger.error(`Something unexpected happened ${error}`);
-    process.exit(0);
+    process.exit(Process.FAILURE);
   }
 };
 
