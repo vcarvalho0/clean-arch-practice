@@ -6,6 +6,12 @@ enum Process {
   FAILURE = 0
 }
 
+process.on("unhandledRejection", (reason, promise) => {
+  logger.error(`Unhandled promise: ${promise} and reason ${reason}`);
+
+  throw reason;
+});
+
 const startServer = async (): Promise<void> => {
   try {
     const server = new ServerSetup();
