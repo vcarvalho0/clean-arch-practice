@@ -11,7 +11,7 @@ describe("WeatherAPI tests", () => {
     const lat = -23.583988;
     const lon = -46.466173;
 
-    axios.get = vitest.fn().mockResolvedValue(weatherFixture);
+    axios.get = vitest.fn().mockResolvedValue({ data: weatherFixture });
 
     const weatherAPI = new WeatherAPI(axios);
 
