@@ -2,7 +2,7 @@ import { ServerSetup } from "@/server";
 import { beforeAll, describe, expect, it } from "vitest";
 import request from "supertest";
 
-describe("Forecast tests", () => {
+describe("Weather tests", () => {
   let server: ServerSetup;
 
   beforeAll(async () => {
@@ -11,7 +11,7 @@ describe("Forecast tests", () => {
     await server.init();
   });
 
-  it("Should return forecast data", async () => {
+  it("Should return weather data", async () => {
     const { body, status } = await request(server.getExpress()).get(
       "/forecast"
     );

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-export class ForecastController {
-  public getForecast(_: Request, res: Response) {
+export class WeatherController {
+  public getWeather(_: Request, res: Response) {
     res.status(200).send({
       name: "London",
       country: "United Kingdom",
