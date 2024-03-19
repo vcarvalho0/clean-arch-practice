@@ -19,4 +19,17 @@ describe("WeatherAPI tests", () => {
 
     expect(response).toEqual(weatherFixtureNormalized);
   });
+
+  it("Should return an ERROR when WeatherAPI service fail", async () => {
+    const lat = -23.583988;
+    const lon = -46.466173;
+
+    axios.get = vitest.fn().mockRejectedValue("Network Error");
+
+    const weatherAPI = new WeatherAPI(axios);
+
+    await expect(weatherAPI.fetch(lat, lon)).rejects.toThrow(
+      'Error when requesting data from WeatherAPI: "Network Error"'
+    );
+  });
 });

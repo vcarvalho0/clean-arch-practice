@@ -47,16 +47,27 @@ interface WeatherNormalized {
   uv: number;
 }
 
+export class ClientError extends Error {
+  constructor(message: string) {
+    const internalMessage = "Error when requesting data from WeatherAPI";
+    super(`${internalMessage}: ${message}`);
+  }
+}
+
 export class WeatherAPI {
   constructor(protected request: AxiosStatic) {}
 
   public async fetch(lat: number, lon: number): Promise<WeatherNormalized> {
-    const response = await this.request.get<WeatherResponse>(
-      `https://api.weatherapi.com/v1/current.json?key=${env.WEATHER_API_KEY}q=${lat},${lon}`,
-      {}
-    );
+    try {
+      const response = await this.request.get<WeatherResponse>(
+        `https://api.weatherapi.com/v1/current.json?key=${env.WEATHER_API_KEY}q=${lat},${lon}`,
+        {}
+      );
 
-    return this.normalizeData(response.data);
+      return this.normalizeData(response.data);
+    } catch (error) {
+      throw new ClientError(JSON.stringify(error));
+    }
   }
 
   private normalizeData(data: WeatherResponse): WeatherNormalized {
