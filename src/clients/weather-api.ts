@@ -1,4 +1,4 @@
-import { AxiosStatic } from "axios";
+import * as HTTP from "@/utils/request";
 import { env } from "@/env";
 
 interface WeatherCondition {
@@ -55,7 +55,7 @@ export class ClientError extends Error {
 }
 
 export class WeatherAPI {
-  constructor(protected request: AxiosStatic) {}
+  constructor(protected request = new HTTP.Request()) {}
 
   public async fetch(lat: number, lon: number): Promise<WeatherNormalized> {
     try {
