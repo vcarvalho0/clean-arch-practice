@@ -1,15 +1,14 @@
 import { WeatherAPI } from "@/clients/weather-api";
 import weatherNormalizedFixture from "../../../test/fixtures/weather_normalized.json";
-import { describe, expect, it, vitest } from "vitest";
-import { Place, WeatherService } from "../weather";
+import { Mocked, describe, expect, it, vitest } from "vitest";
+import { Place, WeatherProcessingError, WeatherService } from "../weather";
 
 vitest.mock("@/clients/weather-api");
 
+const mockedWeatherAPI = new WeatherAPI() as Mocked<WeatherAPI>;
 describe("Weather service", () => {
   it("Should return places with respective weather", async () => {
-    WeatherAPI.prototype.fetch = vitest
-      .fn()
-      .mockResolvedValue(weatherNormalizedFixture);
+    mockedWeatherAPI.fetch.mockResolvedValue(weatherNormalizedFixture);
 
     const places: Place[] = [
       {
@@ -69,8 +68,26 @@ describe("Weather service", () => {
       }
     ];
 
-    const weather = new WeatherService(new WeatherAPI());
+    const weather = new WeatherService(mockedWeatherAPI);
     const weatherPlaces = await weather.processWeatherForPlaces(places);
     expect(weatherPlaces).toEqual(expectedResponse);
+  });
+
+  it("Should throw an error when something goes wrong", async () => {
+    const places: Place[] = [
+      {
+        name: "London",
+        country: "United Kingdom",
+        lat: 51.52,
+        lon: -0.11,
+        userId: "some-user-id"
+      }
+    ];
+
+    mockedWeatherAPI.fetch.mockRejectedValue("Error fetching data");
+    const weather = new WeatherService(mockedWeatherAPI);
+    await expect(weather.processWeatherForPlaces(places)).rejects.toThrowError(
+      WeatherProcessingError
+    );
   });
 });
