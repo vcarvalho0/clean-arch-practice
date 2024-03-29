@@ -7,13 +7,6 @@ interface WeatherCondition {
   code: number;
 }
 
-interface WeatherLocation {
-  name: string;
-  country: string;
-  lat: number;
-  lon: number;
-}
-
 interface WeatherCurrent {
   temp_c: number;
   temp_f: number;
@@ -27,15 +20,10 @@ interface WeatherCurrent {
 }
 
 interface WeatherResponse {
-  location: WeatherLocation;
   current: WeatherCurrent;
 }
 
-interface WeatherNormalized {
-  name: string;
-  country: string;
-  lat: number;
-  lon: number;
+export interface WeatherNormalized {
   temp_c: number;
   temp_f: number;
   condition: WeatherCondition;
@@ -72,10 +60,6 @@ export class WeatherAPI {
 
   private normalizeData(data: WeatherResponse): WeatherNormalized {
     return {
-      name: data.location.name,
-      country: data.location.country,
-      lat: data.location.lat,
-      lon: data.location.lon,
       temp_c: data.current.temp_c,
       temp_f: data.current.temp_f,
       condition: {
