@@ -19,7 +19,7 @@ model User {
 
 model Place {
   id         Int       @id @default(autoincrement())
-  city       String
+  name       String
   country    String
   lat        Int
   lon        Int
