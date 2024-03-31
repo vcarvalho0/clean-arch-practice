@@ -15,14 +15,18 @@ model User {
   places      Place[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("user")
 }
 
 model Place {
   id         Int       @id @default(autoincrement())
   name       String
   country    String
-  lat        Int
-  lon        Int
+  lat        Float
+  lon        Float
   user       User      @relation(fields: [userId], references: [id])
   userId     String
+
+  @@map("place")
 }
