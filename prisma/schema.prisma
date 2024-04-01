@@ -23,8 +23,8 @@ model Place {
   id         Int       @id @default(autoincrement())
   name       String
   country    String
-  lat        Float
-  lon        Float
+  lat        Decimal
+  lon        Decimal
   user       User      @relation(fields: [userId], references: [id])
   userId     String
 
