@@ -1,16 +1,12 @@
 import { WeatherAPI, WeatherNormalized } from "@/clients/weather-api";
+import { Place } from "@prisma/client";
 
-export interface Place {
+export interface PlaceWeatherResponse extends WeatherNormalized {
   name: string;
   country: string;
   lat: number;
   lon: number;
-  userId: string;
 }
-
-export interface PlaceWithWeather
-  extends Omit<Place, "userId">,
-    WeatherNormalized {}
 
 export class WeatherProcessingError extends Error {
   constructor(message: string) {
@@ -23,26 +19,35 @@ export class WeatherService {
 
   public async processWeatherForPlaces(
     places: Place[]
-  ): Promise<PlaceWithWeather[]> {
-    const weatherForEachPlace: PlaceWithWeather[] = [];
+  ): Promise<PlaceWeatherResponse[]> {
+    const weatherForEachPlace: PlaceWeatherResponse[] = [];
     try {
       for (const place of places) {
-        const weather = await this.weatherAPI.fetch(place.lat, place.lon);
-        const enrichWeatherData = {
-          ...{
-            name: place.name,
-            country: place.country,
-            lat: place.lat,
-            lon: place.lon,
-            ...weather
-          }
-        };
-        weatherForEachPlace.push(enrichWeatherData);
+        const weather = await this.weatherAPI.fetch(
+          place.lat.toNumber(),
+          place.lon.toNumber()
+        );
+
+        const enriched = this.enrichWeatherData(place, weather);
+
+        weatherForEachPlace.push(enriched);
       }
 
       return weatherForEachPlace;
     } catch (error) {
       throw new WeatherProcessingError(JSON.stringify(error));
     }
+  }
+
+  private enrichWeatherData(place: Place, weather: WeatherNormalized) {
+    return {
+      ...{
+        name: place.name,
+        country: place.country,
+        lat: place.lat.toNumber(),
+        lon: place.lon.toNumber(),
+        ...weather
+      }
+    };
   }
 }

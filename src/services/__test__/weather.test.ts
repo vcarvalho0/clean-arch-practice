@@ -1,7 +1,9 @@
 import { WeatherAPI } from "@/clients/weather-api";
 import weatherNormalizedFixture from "../../../test/fixtures/weather_normalized.json";
 import { Mocked, describe, expect, it, vitest } from "vitest";
-import { Place, WeatherProcessingError, WeatherService } from "../weather";
+import { WeatherProcessingError, WeatherService } from "../weather";
+import { Place } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 
 vitest.mock("@/clients/weather-api");
 
@@ -12,17 +14,19 @@ describe("Weather service", () => {
 
     const places: Place[] = [
       {
+        id: 1,
         name: "London",
         country: "United Kingdom",
-        lat: 51.52,
-        lon: -0.11,
+        lat: new Decimal(51.52),
+        lon: new Decimal(-0.11),
         userId: "some-user-id"
       },
       {
+        id: 2,
         name: "Amsterdam",
         country: "Netherlands",
-        lat: 51.52,
-        lon: -0.11,
+        lat: new Decimal(51.52),
+        lon: new Decimal(-0.11),
         userId: "some-user-id"
       }
     ];
@@ -76,10 +80,11 @@ describe("Weather service", () => {
   it("Should throw an error when something goes wrong", async () => {
     const places: Place[] = [
       {
+        id: 1,
         name: "London",
         country: "United Kingdom",
-        lat: 51.52,
-        lon: -0.11,
+        lat: new Decimal(51.52),
+        lon: new Decimal(-0.11),
         userId: "some-user-id"
       }
     ];
