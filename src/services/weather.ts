@@ -35,7 +35,7 @@ export class WeatherService {
 
       return weatherForEachPlace;
     } catch (error) {
-      throw new WeatherProcessingError(JSON.stringify(error));
+      throw new WeatherProcessingError((error as Error).message);
     }
   }
 

@@ -35,9 +35,16 @@ export interface WeatherNormalized {
   uv: number;
 }
 
-export class ClientError extends Error {
+export class WeatherAPIError extends Error {
   constructor(message: string) {
     const internalMessage = "Error when requesting data from WeatherAPI";
+    super(`${internalMessage}: ${message}`);
+  }
+}
+
+export class ClientError extends Error {
+  constructor(message: string) {
+    const internalMessage = "Something unexpected happened to the client";
     super(`${internalMessage}: ${message}`);
   }
 }
@@ -53,8 +60,15 @@ export class WeatherAPI {
       );
 
       return this.normalizeData(response.data);
-    } catch (error) {
-      throw new ClientError(JSON.stringify(error));
+    } catch (err) {
+      if (err instanceof Error) {
+        const error = HTTP.Request.getRequestError(err);
+        throw new WeatherAPIError(
+          `Error: ${JSON.stringify(error.data)} Code: ${error.statusCode}`
+        );
+      }
+
+      throw new ClientError(JSON.stringify(err));
     }
   }
 
