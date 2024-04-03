@@ -22,6 +22,6 @@ export function configureRouter(app: Application) {
     .route("/places")
     .post(authMiddleware, placeController.create.bind(placeController));
   app
-    .route("/weather")
+    .route("/places/weather")
     .get(authMiddleware, weatherController.getWeather.bind(weatherController));
 }

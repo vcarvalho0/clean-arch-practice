@@ -55,7 +55,7 @@ export class WeatherAPI {
   public async fetch(lat: number, lon: number): Promise<WeatherNormalized> {
     try {
       const response = await this.request.get<WeatherResponse>(
-        `https://api.weatherapi.com/v1/current.json?key=${env.WEATHER_API_KEY}q=${lat},${lon}`,
+        `https://api.weatherapi.com/v1/current.json?key=${env.WEATHER_API_KEY}&q=${lat},${lon}`,
         {}
       );
 

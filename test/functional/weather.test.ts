@@ -1,10 +1,12 @@
-import { ServerSetup } from "@/server";
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import request from "supertest";
+import nock from "nock";
+import { ServerSetup } from "@/server";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
 import JwtService from "@/services/jwt";
 import { PlacePrismaDBRepository } from "@/repositories/prisma/prisma-place-repository";
-import weatherNormalizedFixture from "../fixtures/weather_normalized.json";
+import weatherFixture from "../fixtures/weather.json";
+import weatherServiceResponseFixture from "../fixtures/weather_service_response.json";
 
 describe("Weather tests", () => {
   let server: ServerSetup;
@@ -25,6 +27,9 @@ describe("Weather tests", () => {
 
   let token: string;
   beforeEach(async () => {
+    await places.deleteAllPlaces();
+    await usersRepository.deleteAll();
+
     const user = await usersRepository.create(defaultUser);
     token = JwtService.generateToken(user.id);
 
@@ -36,21 +41,26 @@ describe("Weather tests", () => {
       userId: user.id
     };
 
-    await places.deleteAllPlaces();
     await places.create(defaultPlace);
   });
 
-  afterEach(async () => {
-    await places.deleteAllPlaces();
-    await usersRepository.deleteAll();
-  });
+  it("Should return weather data for each place", async () => {
+    nock("https://api.weatherapi.com:443", {
+      encodedQueryParams: true
+    })
+      .defaultReplyHeaders({ "access-control-allow-origin": "*" })
+      .get("/v1/current.json")
+      .query({
+        key: "yourweatherapikey",
+        q: "51.52%2C-0.11"
+      })
+      .reply(200, weatherFixture);
 
-  it("Should return weather data", async () => {
     const { body, status } = await request(server.getExpress())
       .get("/places/weather")
       .set("Authorization", `Bearer ${token}`);
 
     expect(status).toBe(200);
-    expect(body).toEqual(weatherNormalizedFixture);
+    expect(body).toEqual(weatherServiceResponseFixture);
   });
 });
