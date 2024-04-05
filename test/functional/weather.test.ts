@@ -1,40 +1,66 @@
-import { ServerSetup } from "@/server";
-import { beforeAll, describe, expect, it } from "vitest";
 import request from "supertest";
+import nock from "nock";
+import { ServerSetup } from "@/server";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
+import JwtService from "@/services/jwt";
+import { PlacePrismaDBRepository } from "@/repositories/prisma/prisma-place-repository";
+import weatherFixture from "../fixtures/weather.json";
+import weatherServiceResponseFixture from "../fixtures/weather_service_response.json";
 
 describe("Weather tests", () => {
   let server: ServerSetup;
 
+  const defaultUser = {
+    username: "John Doe",
+    email: "johndoe@email.com",
+    password: "123456"
+  };
+
+  const places = new PlacePrismaDBRepository();
+  const usersRepository = new UserPrismaDBRepository();
   beforeAll(async () => {
     server = new ServerSetup();
 
     await server.init();
   });
 
-  it("Should return weather data", async () => {
-    const { body, status } = await request(server.getExpress()).get(
-      "/forecast"
-    );
+  let token: string;
+  beforeEach(async () => {
+    await places.deleteAllPlaces();
+    await usersRepository.deleteAll();
 
-    expect(status).toBe(200);
-    expect(body).toEqual({
+    const user = await usersRepository.create(defaultUser);
+    token = JwtService.generateToken(user.id);
+
+    const defaultPlace = {
       name: "London",
       country: "United Kingdom",
       lat: 51.52,
       lon: -0.11,
-      temp_c: 9,
-      temp_f: 48.2,
-      condition: {
-        text: "Clear",
-        icon: "//cdn.weatherapi.com/weather/64x64/night/113.png",
-        code: 1000
-      },
-      wind_mph: 6.9,
-      wind_kph: 11.2,
-      wind_direction: "SW",
-      feelslike_c: 7.2,
-      feelslike_f: 45,
-      uv: 0
-    });
+      userId: user.id
+    };
+
+    await places.create(defaultPlace);
+  });
+
+  it("Should return weather data for each place", async () => {
+    nock("https://api.weatherapi.com:443", {
+      encodedQueryParams: true
+    })
+      .defaultReplyHeaders({ "access-control-allow-origin": "*" })
+      .get("/v1/current.json")
+      .query({
+        key: "yourweatherapikey",
+        q: "51.52%2C-0.11"
+      })
+      .reply(200, weatherFixture);
+
+    const { body, status } = await request(server.getExpress())
+      .get("/places/weather")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(status).toBe(200);
+    expect(body).toEqual(weatherServiceResponseFixture);
   });
 });

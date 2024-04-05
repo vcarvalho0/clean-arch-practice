@@ -1,7 +1,7 @@
 import { expect, it, describe, beforeAll } from "vitest";
 import request from "supertest";
 import { ServerSetup } from "@/server";
-import { UserPrismaDBRepository } from "@/repositories/prisma-user-repository";
+import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
 import HashService from "@/services/hash";
 import AuthService from "@/services/jwt";
 

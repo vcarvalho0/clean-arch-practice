@@ -7,13 +7,6 @@ interface WeatherCondition {
   code: number;
 }
 
-interface WeatherLocation {
-  name: string;
-  country: string;
-  lat: number;
-  lon: number;
-}
-
 interface WeatherCurrent {
   temp_c: number;
   temp_f: number;
@@ -27,15 +20,10 @@ interface WeatherCurrent {
 }
 
 interface WeatherResponse {
-  location: WeatherLocation;
   current: WeatherCurrent;
 }
 
-interface WeatherNormalized {
-  name: string;
-  country: string;
-  lat: number;
-  lon: number;
+export interface WeatherNormalized {
   temp_c: number;
   temp_f: number;
   condition: WeatherCondition;
@@ -47,9 +35,16 @@ interface WeatherNormalized {
   uv: number;
 }
 
-export class ClientError extends Error {
+export class WeatherAPIError extends Error {
   constructor(message: string) {
     const internalMessage = "Error when requesting data from WeatherAPI";
+    super(`${internalMessage}: ${message}`);
+  }
+}
+
+export class ClientError extends Error {
+  constructor(message: string) {
+    const internalMessage = "Something unexpected happened to the client";
     super(`${internalMessage}: ${message}`);
   }
 }
@@ -60,22 +55,25 @@ export class WeatherAPI {
   public async fetch(lat: number, lon: number): Promise<WeatherNormalized> {
     try {
       const response = await this.request.get<WeatherResponse>(
-        `https://api.weatherapi.com/v1/current.json?key=${env.WEATHER_API_KEY}q=${lat},${lon}`,
+        `https://api.weatherapi.com/v1/current.json?key=${env.WEATHER_API_KEY}&q=${lat},${lon}`,
         {}
       );
 
       return this.normalizeData(response.data);
-    } catch (error) {
-      throw new ClientError(JSON.stringify(error));
+    } catch (err) {
+      if (err instanceof Error) {
+        const error = HTTP.Request.getRequestError(err);
+        throw new WeatherAPIError(
+          `Error: ${JSON.stringify(error.data)} Code: ${error.statusCode}`
+        );
+      }
+
+      throw new ClientError(JSON.stringify(err));
     }
   }
 
   private normalizeData(data: WeatherResponse): WeatherNormalized {
     return {
-      name: data.location.name,
-      country: data.location.country,
-      lat: data.location.lat,
-      lon: data.location.lon,
       temp_c: data.current.temp_c,
       temp_f: data.current.temp_f,
       condition: {

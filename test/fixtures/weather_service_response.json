@@ -1,0 +1,22 @@
+[
+  {
+    "name": "London",
+    "country": "United Kingdom",
+    "lat": 51.52,
+    "lon": -0.11,
+    "temp_c": 8.0,
+    "temp_f": 46.4,
+    "condition": {
+      "text": "Overcast",
+      "icon": "//cdn.weatherapi.com/weather/64x64/night/122.png",
+      "code": 1009
+    },
+    "wind_mph": 6.9,
+    "wind_kph": 11.2,
+    "wind_direction": "W",
+    "feelslike_c": 6.0,
+    "feelslike_f": 42.9,
+    "uv": 1.0
+  }
+]
+
