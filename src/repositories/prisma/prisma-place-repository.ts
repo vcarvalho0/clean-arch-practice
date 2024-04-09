@@ -25,8 +25,4 @@ export class PlacePrismaDBRepository
 
     return places;
   }
-
-  async deleteAllPlaces(): Promise<void> {
-    await prisma.place.deleteMany({});
-  }
 }

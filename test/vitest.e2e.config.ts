@@ -5,7 +5,7 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      include: ["test/**/*.test.{ts,js}"],
+      include: ["test/**/*.{test,spec}.{ts,js}"],
       name: "e2e-tests",
       environment: "node"
     }

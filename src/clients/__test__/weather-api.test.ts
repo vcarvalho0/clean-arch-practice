@@ -33,7 +33,7 @@ describe("WeatherAPI tests", () => {
     const weatherAPI = new WeatherAPI(mockedAxios);
 
     await expect(weatherAPI.fetch(lat, lon)).rejects.toThrow(
-      'Error when requesting data from WeatherAPI: "Network Error"'
+      'Something unexpected happened to the client: "Network Error"'
     );
   });
 });

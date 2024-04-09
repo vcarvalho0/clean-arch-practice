@@ -1,15 +1,16 @@
 import request from "supertest";
 import nock from "nock";
-import { ServerSetup } from "@/server";
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
 import JwtService from "@/services/jwt";
-import { PlacePrismaDBRepository } from "@/repositories/prisma/prisma-place-repository";
 import weatherFixture from "../fixtures/weather.json";
 import weatherServiceResponseFixture from "../fixtures/weather_service_response.json";
+import { ServerSetup } from "@/server";
+import { beforeEach, beforeAll, describe, expect, it } from "vitest";
+import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
+import { PlacePrismaDBRepository } from "@/repositories/prisma/prisma-place-repository";
 
 describe("Weather tests", () => {
-  let server: ServerSetup;
+  const placesRepository = new PlacePrismaDBRepository();
+  const usersRepository = new UserPrismaDBRepository();
 
   const defaultUser = {
     username: "John Doe",
@@ -17,8 +18,7 @@ describe("Weather tests", () => {
     password: "123456"
   };
 
-  const places = new PlacePrismaDBRepository();
-  const usersRepository = new UserPrismaDBRepository();
+  let server: ServerSetup;
   beforeAll(async () => {
     server = new ServerSetup();
 
@@ -27,9 +27,6 @@ describe("Weather tests", () => {
 
   let token: string;
   beforeEach(async () => {
-    await places.deleteAllPlaces();
-    await usersRepository.deleteAll();
-
     const user = await usersRepository.create(defaultUser);
     token = JwtService.generateToken(user.id);
 
@@ -41,7 +38,7 @@ describe("Weather tests", () => {
       userId: user.id
     };
 
-    await places.create(defaultPlace);
+    await placesRepository.create(defaultPlace);
   });
 
   it("Should return weather data for each place", async () => {

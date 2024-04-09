@@ -1,34 +1,17 @@
-import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
-import { ServerSetup } from "@/server";
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import request from "supertest";
 import JwtService from "@/services/jwt";
-import { PlacePrismaDBRepository } from "@/repositories/prisma/prisma-place-repository";
+import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
+import { ServerSetup } from "@/server";
+import { beforeAll, describe, expect, it } from "vitest";
 
 describe("Places tests", () => {
-  const defaultUser = {
-    username: "John Doe",
-    email: "johndoe@email.com",
-    password: "123456"
-  };
+  const usersRepository = new UserPrismaDBRepository();
 
   let server: ServerSetup;
-  const usersRepository = new UserPrismaDBRepository();
-  const placesRepository = new PlacePrismaDBRepository();
   beforeAll(async () => {
     server = new ServerSetup();
+
     await server.init();
-  });
-
-  let token: string;
-  beforeEach(async () => {
-    const user = await usersRepository.create(defaultUser);
-    token = JwtService.generateToken(user.id);
-  });
-
-  afterEach(async () => {
-    await placesRepository.deleteAllPlaces();
-    await usersRepository.deleteAll();
   });
 
   it("Should create a new place", async () => {
@@ -38,6 +21,15 @@ describe("Places tests", () => {
       lat: 51.52,
       lon: -0.11
     };
+
+    const defaultUser = {
+      username: "John Doe",
+      email: "johndoe@email.com",
+      password: "123456"
+    };
+
+    const user = await usersRepository.create(defaultUser);
+    const token = JwtService.generateToken(user.id);
 
     const response = await request(server.getExpress())
       .post("/places")
