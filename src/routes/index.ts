@@ -1,4 +1,4 @@
-import { WeatherController } from "@/controller/weather";
+import { WeatherController, rateLimiter } from "@/controller/weather";
 import { UserController } from "@/controller/users";
 import { authMiddleware } from "@/middleware/authentication";
 import { UserPrismaDBRepository } from "@/repositories/prisma/prisma-user-repository";
@@ -23,5 +23,8 @@ export function configureRouter(app: Application) {
     .post(authMiddleware, placeController.create.bind(placeController));
   app
     .route("/places/weather")
-    .get(authMiddleware, weatherController.getWeather.bind(weatherController));
+    .get(
+      [authMiddleware, rateLimiter],
+      weatherController.getWeather.bind(weatherController)
+    );
 }
