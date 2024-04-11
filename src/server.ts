@@ -4,6 +4,7 @@ import { env } from "./env";
 import http from "http";
 import { configureRouter } from "./routes";
 import * as database from "./database";
+import swaggerUi from "swagger-ui-express";
 import logger from "./logger";
 
 export class ServerSetup {
@@ -17,8 +18,13 @@ export class ServerSetup {
 
   public async init(): Promise<void> {
     await this.database();
+    await this.docsSetup();
 
     this.middlewareSetup();
+  }
+
+  private async docsSetup(): Promise<void> {
+    this.express.use("/docs", swaggerUi.serve, swaggerUi.setup());
   }
 
   private middlewareSetup(): void {
