@@ -5,6 +5,7 @@ import http from "http";
 import { configureRouter } from "./routes";
 import * as database from "./database";
 import swaggerUi from "swagger-ui-express";
+import swaggerSchema from "@/swagger-schema.json";
 import logger from "./logger";
 
 export class ServerSetup {
@@ -24,7 +25,7 @@ export class ServerSetup {
   }
 
   private async docsSetup(): Promise<void> {
-    this.express.use("/docs", swaggerUi.serve, swaggerUi.setup());
+    this.express.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSchema));
   }
 
   private middlewareSetup(): void {

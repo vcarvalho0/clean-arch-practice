@@ -1,0 +1,72 @@
+{
+  "info": {
+    "title": "Weather",
+    "description": "Check the current weather in a place"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "description": "Create a new user",
+        "operationId": "createUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/authenticate": {
+
+    },
+    "/users/me": {
+
+    },
+    "/places": {
+
+    },
+    "/places/weather": {
+
+    }
+  },
+  "components": {
+    "schemas": {
+      "name": {
+        "type": "string",
+        "example": "John Doe"
+      },
+      "email": {
+        "type": "string",
+        "example": "johndoe@email.com"
+      },
+      "password": {
+        "type": "string",
+        "example": "123@m%456"
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/password"
+          }
+        }
+      }
+    }
+  }
+}
