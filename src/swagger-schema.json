@@ -65,9 +65,28 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "description": "Get using profile using JWT token",
+        "operationId": "getUserProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The user information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Missing jwt",
             "content": {
               "application/json": {
                 "schema": {
@@ -75,7 +94,7 @@
                 },
                 "example": {
                   "code": "401",
-                  "message": "Unauthorized"
+                  "message": "jwt must be provided"
                 }
               }
             }
@@ -83,11 +102,48 @@
         }
       }
     },
-    "/users/me": {
-
-    },
     "/places": {
-
+      "post": {
+        "description": "Create a new place",
+        "operationId": "createPlace",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+              "$ref": "#/components/schemas/Place"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Place created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceCreatedResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing jwt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "401",
+                  "message": "jwt must be provided"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/places/weather": {
 
@@ -118,6 +174,30 @@
       "id": {
         "type": "string",
         "example": "a5d636de-f5ae-4e5a-9c05-52474a8c3d8e"
+      },
+      "userId": {
+        "type": "string",
+        "example": "a5d636de-f5ae-4e5a-9c05-52474a8c3d8e"
+      },
+      "placeId": {
+        "type": "number",
+        "example": 1
+      },
+      "placeName": {
+        "type": "string",
+        "example": "Amsterdam"
+      },
+      "placeCountry": {
+        "type": "string",
+        "example": "Netherlands"
+      },
+      "placeLat": {
+        "type": "number",
+        "example": 52.2302522
+      },
+      "placeLon": {
+        "type": "number",
+        "example": 4.876811
       },
       "User": {
         "type": "object",
@@ -166,6 +246,63 @@
         "properties": {
           "token": {
             "$ref": "#/components/schemas/jwtToken"
+          }
+        }
+      },
+      "UserProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/passwordEncrypted"
+          }
+        }
+      },
+      "Place": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/placeName"
+          },
+          "country": {
+            "$ref": "#/components/schemas/placeCountry"
+          },
+          "lat": {
+            "$ref": "#/components/schemas/placeLat"
+          },
+          "lon": {
+            "$ref": "#/components/schemas/placeLon"
+          }
+        }
+      },
+      "PlaceCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/placeId"
+          },
+          "name": {
+            "$ref": "#/components/schemas/placeName"
+          },
+          "country": {
+            "$ref": "#/components/schemas/placeCountry"
+          },
+          "lat": {
+            "$ref": "#/components/schemas/placeLat"
+          },
+          "lon": {
+            "$ref": "#/components/schemas/placeLon"
+          },
+          "userId": {
+            "$ref": "#/components/schemas/userId"
           }
         }
       },
