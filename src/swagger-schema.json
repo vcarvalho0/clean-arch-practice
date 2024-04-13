@@ -22,12 +22,65 @@
                 "$ref": "#/components/schemas/User"
               }
             }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCreatedResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/users/authenticate": {
-
+      "post": {
+        "description": "Authenticate user generating a JWT token",
+        "operationId": "authenticateUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+              "$ref": "#/components/schemas/UserAuth"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The user has been authenticated with JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticatedUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "409",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/users/me": {
 
@@ -41,6 +94,10 @@
   },
   "components": {
     "schemas": {
+      "jwtToken": {
+        "type": "string",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5Yzk3YTZlMy01YjNiLTRlOTAtOTYwYy1kZDA2ZjQ1MjUxOTAiLCJpYXQiOjE3MTI1NDk4OTQsImV4cCI6MTcxMjU1MzQ5NH0.4JKLQ-f7KfVJV0tKGjexAl50BY6PxtDm3Fq8fUV-4cE"
+      },
       "name": {
         "type": "string",
         "example": "John Doe"
@@ -53,6 +110,10 @@
         "type": "string",
         "example": "123@m%456"
       },
+      "id": {
+        "type": "string",
+        "example": "1b2131acl46768d9e4f06c884"
+      },
       "User": {
         "type": "object",
         "properties": {
@@ -64,6 +125,63 @@
           },
           "password": {
             "$ref": "#/components/schemas/password"
+          }
+        }
+      },
+      "UserCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/email"
+          }
+        }
+      },
+      "UserAuth": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/password"
+          }
+        }
+      },
+      "AuthenticatedUserResponse": {
+        "type": "object",
+        "name": {
+          "$ref": "#/components/schemas/name"
+        },
+        "email": {
+          "$ref": "#/components/schemas/email"
+        },
+        "password": {
+          "$ref": "#/components/schemas/email"
+        },
+        "id": {
+          "$ref": "#/components/schemas/id"
+        },
+        "token": {
+          "$ref": "#/components/schemas/jwtToken"
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
           }
         }
       }
