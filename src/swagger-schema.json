@@ -1,0 +1,454 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Weather",
+    "description": "Check the current weather in a place"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "description": "Create a new user",
+        "operationId": "createUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCreatedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/authenticate": {
+      "post": {
+        "description": "Authenticate user generating a JWT token",
+        "operationId": "authenticateUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+              "$ref": "#/components/schemas/UserAuth"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The user has been authenticated with JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticatedUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "description": "Get using profile using JWT token",
+        "operationId": "getUserProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The user information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing jwt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "401",
+                  "message": "jwt must be provided"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/places": {
+      "post": {
+        "description": "Create a new place",
+        "operationId": "createPlace",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+              "$ref": "#/components/schemas/Place"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Place created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceCreatedResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing jwt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "401",
+                  "message": "jwt must be provided"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/places/weather": {
+      "get": {
+        "description": "Get weather data using latitude and longitude",
+        "operationId": "getWeather",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The weather information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing jwt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "401",
+                  "message": "jwt must be provided"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "jwtToken": {
+        "type": "string",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5Yzk3YTZlMy01YjNiLTRlOTAtOTYwYy1kZDA2ZjQ1MjUxOTAiLCJpYXQiOjE3MTI1NDk4OTQsImV4cCI6MTcxMjU1MzQ5NH0.4JKLQ-f7KfVJV0tKGjexAl50BY6PxtDm3Fq8fUV-4cE"
+      },
+      "name": {
+        "type": "string",
+        "example": "John Doe"
+      },
+      "email": {
+        "type": "string",
+        "example": "johndoe@email.com"
+      },
+      "password": {
+        "type": "string",
+        "example": "123456"
+      },
+      "passwordEncrypted": {
+        "type": "string",
+        "example": "$2b$10$px3F5d1s0c/MwObCo7CJLu68LAZ3VyvtTFppQWFi455j9QMC5C.e2"
+      },
+      "id": {
+        "type": "string",
+        "example": "a5d636de-f5ae-4e5a-9c05-52474a8c3d8e"
+      },
+      "userId": {
+        "type": "string",
+        "example": "a5d636de-f5ae-4e5a-9c05-52474a8c3d8e"
+      },
+      "placeId": {
+        "type": "number",
+        "example": 1
+      },
+      "placeName": {
+        "type": "string",
+        "example": "Amsterdam"
+      },
+      "placeCountry": {
+        "type": "string",
+        "example": "Netherlands"
+      },
+      "placeLat": {
+        "type": "number",
+        "example": 52.2302522
+      },
+      "placeLon": {
+        "type": "number",
+        "example": 4.876811
+      },
+      "temp_c": {
+        "type": "number",
+        "example": 12
+      },
+      "temp_f": {
+        "type": "number",
+        "example": 53.6
+      },
+      "text": {
+        "type": "string",
+        "example": "Partly Cloud"
+      },
+      "icon": {
+        "type": "string",
+        "example": "//cdn.weatherapi.com/weather/64x64/day/116.png"
+      },
+      "code": {
+        "type": "number",
+        "example": 1003
+      },
+      "condition": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "$ref": "#/components/schemas/text"
+          },
+          "icon": {
+            "$ref": "#/components/schemas/icon"
+          },
+          "code": {
+            "$ref": "#/components/schemas/code"
+          }
+        }
+      },
+      "wind_mph": {
+        "type": "number",
+        "example": 3.8
+      },
+      "wind_kph": {
+        "type": "number",
+        "example": 6.1
+      },
+      "wind_direction": {
+        "type": "string",
+        "example": "SW"
+      },
+      "feelslike_c": {
+        "type": "number",
+        "example": 11
+      },
+      "feelslike_f": {
+        "type": "number",
+        "example": 51.8
+      },
+      "uv": {
+        "type": "number",
+        "example": 1
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/password"
+          }
+        }
+      },
+      "UserCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/passwordEncrypted"
+          }
+        }
+      },
+      "UserAuth": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/password"
+          }
+        }
+      },
+      "AuthenticatedUserResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "$ref": "#/components/schemas/jwtToken"
+          }
+        }
+      },
+      "UserProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/passwordEncrypted"
+          }
+        }
+      },
+      "Place": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/placeName"
+          },
+          "country": {
+            "$ref": "#/components/schemas/placeCountry"
+          },
+          "lat": {
+            "$ref": "#/components/schemas/placeLat"
+          },
+          "lon": {
+            "$ref": "#/components/schemas/placeLon"
+          }
+        }
+      },
+      "PlaceCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/placeId"
+          },
+          "name": {
+            "$ref": "#/components/schemas/placeName"
+          },
+          "country": {
+            "$ref": "#/components/schemas/placeCountry"
+          },
+          "lat": {
+            "$ref": "#/components/schemas/placeLat"
+          },
+          "lon": {
+            "$ref": "#/components/schemas/placeLon"
+          },
+          "userId": {
+            "$ref": "#/components/schemas/userId"
+          }
+        }
+      },
+      "WeatherResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/placeName"
+          },
+          "country": {
+            "$ref": "#/components/schemas/placeCountry"
+          },
+          "lat": {
+            "$ref": "#/components/schemas/placeLat"
+          },
+          "lon": {
+            "$ref": "#/components/schemas/placeLon"
+          },
+          "temp_c": {
+            "$ref": "#/components/schemas/temp_c"
+          },
+          "temp_f": {
+            "$ref": "#/components/schemas/temp_f"
+          },
+          "condition": {
+            "$ref": "#/components/schemas/condition"
+          },
+          "wind_mph": {
+            "$ref": "#/components/schemas/wind_mph"
+          },
+          "wind_kph": {
+            "$ref": "#/components/schemas/wind_kph"
+          },
+          "wind_direction": {
+            "$ref": "#/components/schemas/wind_direction"
+          },
+          "feelslike_c": {
+            "$ref": "#/components/schemas/feelslike_c"
+          },
+          "feelslike_f": {
+            "$ref": "#/components/schemas/feelslike_f"
+          },
+          "uv": {
+            "$ref": "#/components/schemas/uv"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
