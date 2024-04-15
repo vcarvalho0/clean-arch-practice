@@ -146,7 +146,37 @@
       }
     },
     "/places/weather": {
-
+      "get": {
+        "description": "Get weather data using latitude and longitude",
+        "operationId": "getWeather",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The weather information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing jwt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "401",
+                  "message": "jwt must be provided"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -198,6 +228,64 @@
       "placeLon": {
         "type": "number",
         "example": 4.876811
+      },
+      "temp_c": {
+        "type": "number",
+        "example": 12
+      },
+      "temp_f": {
+        "type": "number",
+        "example": 53.6
+      },
+      "text": {
+        "type": "string",
+        "example": "Partly Cloud"
+      },
+      "icon": {
+        "type": "string",
+        "example": "//cdn.weatherapi.com/weather/64x64/day/116.png"
+      },
+      "code": {
+        "type": "number",
+        "example": 1003
+      },
+      "condition": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "$ref": "#/components/schemas/text"
+          },
+          "icon": {
+            "$ref": "#/components/schemas/icon"
+          },
+          "code": {
+            "$ref": "#/components/schemas/code"
+          }
+        }
+      },
+      "wind_mph": {
+        "type": "number",
+        "example": 3.8
+      },
+      "wind_kph": {
+        "type": "number",
+        "example": 6.1
+      },
+      "wind_direction": {
+        "type": "string",
+        "example": "SW"
+      },
+      "feelslike_c": {
+        "type": "number",
+        "example": 11
+      },
+      "feelslike_f": {
+        "type": "number",
+        "example": 51.8
+      },
+      "uv": {
+        "type": "number",
+        "example": 1
       },
       "User": {
         "type": "object",
@@ -303,6 +391,50 @@
           },
           "userId": {
             "$ref": "#/components/schemas/userId"
+          }
+        }
+      },
+      "WeatherResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/placeName"
+          },
+          "country": {
+            "$ref": "#/components/schemas/placeCountry"
+          },
+          "lat": {
+            "$ref": "#/components/schemas/placeLat"
+          },
+          "lon": {
+            "$ref": "#/components/schemas/placeLon"
+          },
+          "temp_c": {
+            "$ref": "#/components/schemas/temp_c"
+          },
+          "temp_f": {
+            "$ref": "#/components/schemas/temp_f"
+          },
+          "condition": {
+            "$ref": "#/components/schemas/condition"
+          },
+          "wind_mph": {
+            "$ref": "#/components/schemas/wind_mph"
+          },
+          "wind_kph": {
+            "$ref": "#/components/schemas/wind_kph"
+          },
+          "wind_direction": {
+            "$ref": "#/components/schemas/wind_direction"
+          },
+          "feelslike_c": {
+            "$ref": "#/components/schemas/feelslike_c"
+          },
+          "feelslike_f": {
+            "$ref": "#/components/schemas/feelslike_f"
+          },
+          "uv": {
+            "$ref": "#/components/schemas/uv"
           }
         }
       },
