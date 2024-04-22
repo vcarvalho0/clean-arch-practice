@@ -18,10 +18,12 @@ To start the development server
 npm run dev
 ```
 
-## .env
-Rename `.env.example` to `.env`
+## Environment Variables
+Rename `.env.example` to `.env`\
 Don't forget to configure your port and put the api keys
-`PORT=8080`
-`SECRET_JWT_KEY=yoursupersecretkey`
-`WEATHER_API_KEY="yourweatherapikey"` 
+```
+PORT=8080
+SECRET_JWT_KEY=yoursupersecretkey
+WEATHER_API_KEY="yourweatherapikey"
+```
 You can get your weather api key here https://www.weatherapi.com/
